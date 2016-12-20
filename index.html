@@ -1,0 +1,58 @@
+<!-- * The player will be shown a random number at the start of the game.
+
+* When the player clicks on a crystal, it will add a specific amount of points to the player's total score. 
+    * Your game will hide this amount until the player clicks a crystal.
+    * When they do click one, update the player's score counter.
+
+* The player wins if their total score matches the random number from the beginning of the game.
+
+* The player loses if their score goes above the random number.
+
+* The game restarts whenever the player wins or loses.
+    * When the game begins again, the player should see a new random number. Also, all the crystals will have four new hidden values. Of course, the user's score (and score counter) will reset to zero.
+
+* The app should show the number of games the player wins and loses. To that end, do not refresh the page as a means to restart the game. -->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gems!</title>
+	<link href="https://fonts.googleapis.com/css?family=Coda:400,800" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+	
+</head>
+<body>
+
+<div id="modal">
+    <div class="modalcontent">
+         <h1></h1>
+
+        <p>Each gem contains a secret number of points. Click each gem to add points to the starting number on the left. The object of the game is to reach the target number on the right without going over!</p>
+        <p><em>Tip: Try to figure out the value of each gem</em>
+  </p>
+        <button id="button">Close</button>
+    </div>
+</div>
+
+<div class="center">
+	<img class="buttonA" src="assets/images/GemA.png">
+	<img class="buttonB" src="assets/images/GemB.png">
+	<img class="buttonC" src="assets/images/GemC.png">
+	<img class="buttonD" src="assets/images/GemD.png">
+</div>
+
+<div class="stats">
+	<div id="startingNumber"></div>
+	<div id="gameCount"></div>
+	<div id="wins"></div>
+	<div id="losses"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.1.1.js"  integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+  crossorigin="anonymous"></script> <!--Jquery link-->
+<script type="text/javascript" src="assets/javascript/script.js"></script>
+
+
+</body>
+</html>
