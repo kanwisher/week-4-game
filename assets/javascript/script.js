@@ -1,150 +1,121 @@
 //waits until page is ready before starting manipulation//
 
 window.onload = function () {
-    document.getElementById('button').onclick = function () {
-        document.getElementById('modal').style.display = "none"
-    };
-};
-
-
-$(document).ready(function(){
 	
+	let gems = {
+		A: {
+			value: 0,
+			audio: new Audio("assets/sounds/gem1.mp3")
+		},
+		B: {
+			value: 0,
+			audio: new Audio("assets/sounds/gem2.mp3")
+		},
+		C: {
+			value: 0,
+			audio: new Audio("assets/sounds/gem3.mp3")
+		},
+		D: {
+			value: 0,
+			audio: new Audio("assets/sounds/gem4.mp3")
+		}
+	}
+
+	let targetNumber;
+	let gameCount;
+	let wins = 0;
+	let losses = 0;
+	let pickGemValue;
+	const audioLose = new Audio("assets/sounds/lose.wav");
+	const audioWin = new Audio("assets/sounds/win.mp3");
 
 
+	//generates game//
+	function startGame(){
+		assignGemValues();
+		gameCount = 0;
+		targetNumber = randomNumber(19, 120);
+		$$("#gameCount").textContent = gameCount;
+		$$("#startingNumber").textContent = targetNumber;
+		$$("#wins").textContent = `Wins: ${wins}`;
+		$$("#losses").textContent = `Losses: ${losses}`;
+	};
 
-//variables in scope of document ready function//
-var gemArray = [];
-var gemA;
-var gemB;
-var gemC;
-var gemD;
-var startingNumber;
-var gameCount;
-var wins = 0;
-var losses = 0;
+	//on click function//
+	function attachListeners(){
+		$$("#button").addEventListener("click", (e) => {
+			$$("#modal").style.display = "none"			
+		});
 
-//audio calls//
-var audioLose = new Audio("assets/sounds/lose.wav");
-var audioWin = new Audio("assets/sounds/win.mp3");
-var audio1 = new Audio("assets/sounds/gem1.mp3");
-var audio2 = new Audio("assets/sounds/gem2.mp3");
-var audio3 = new Audio("assets/sounds/gem3.mp3");
-var audio4 = new Audio("assets/sounds/gem4.mp3");
+		$$(".gem").forEach(gem => {
+			gem.addEventListener("click", (e) => {
+				const attr = e.currentTarget.getAttribute('data-title');
+				gemIncrease(gems[attr])
+			});
+		});
+	}
 
+	//increases gem count and updates count in document, then checks for win//
+	function gemIncrease (gem) {
+		gameCount += gem.value;
+		$$("#gameCount").textContent = gameCount;
+		gem.audio.currentTime = 0;
+		gem.audio.play();
+		winCheck();
+	}
 
-//runs the reset game function for a fresh game with random variables
+	//Checks if player wins or loses//
+	function winCheck(){
+		if(gameCount === targetNumber){
+			wins++;
+			audioWin.play();
+			startGame();
+			
+		} else if(gameCount > targetNumber){		
+			losses++;
+			audioLose.play();
+			startGame();			
+		}
+	};
 
-resetGame();
+	//generates a random number between 1 and 19 without having two gems with the same number (closure)
+	function gemRand(){
+		const gemArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+		return function(){
+			const num = randomNumber(0, gemArray.length - 1); //picks a random number in array
+			const pull = gemArray.splice(num, 1); //splice pulls this number out of original array so that it cannot be chosen again
+			console.log(pull);
+			return pull[0]; //note that splice returns an array, so return first index
+		}
+	};
 
+	function assignGemValues(){
+		const pickGemValue = gemRand();
+		for(let prop in gems){
+			gems[prop].value = pickGemValue();
+		}
+	}
 
-//gem 1 on click function//
+	//Generates a random number in a range//
+	function randomNumber(lowerNum, upperNum) {
+		return Math.floor(Math.random()*(upperNum - lowerNum + 1)) + lowerNum;	
+	};
 
-$(".buttonA").click(function() {
-	gemIncrease(gemA);
-	audio1.currentTime = 0;
-	audio1.play();
-});
-
-
-
-//gem 2 on click function//
-
-
-$(".buttonB").click(function() {
-	gemIncrease(gemB);
-	audio2.currentTime = 0;
-	audio2.play();
-});
-
-
-
-//gem 3 on click function//
-
-$(".buttonC").click(function() {
-	gemIncrease(gemC);
-	audio3.currentTime = 0;
-	audio3.play();
-});
-
-
-//gem 4 on click function//
-
-$(".buttonD").click(function() {
-	gemIncrease(gemD);
-	audio4.currentTime = 0;
-	audio4.play();
-});
-
-
-//increases gem count and updates count in document, then checks for win//
-
-function gemIncrease (gem) {
-	gameCount += gem;
-	$("#gameCount").html(gameCount);
-	winCheck();
-
-}
-
-
-//Checks if player wins or loses//
-
-function winCheck(){
-	if(startingNumber === gameCount){
-		wins++;
-		audioWin.play();
-		resetGame();
-		
-	} else if(gameCount > startingNumber){
-		
-		losses++;
-		audioLose.play();
-		resetGame();
-		
-}
-};
-
-
-
-//Generates a random number in a range//
-
-function randomNumber(lowerNum, upperNum) {
-	return Math.floor(Math.random()*(upperNum - lowerNum + 1)) + lowerNum;	
-};
-
-
-
-//generates a random number between 1 and 19 without having two gems with the same number//
-//variables/array not accessible outside of function's scope//
-
-function gemFunction (){
-	var num = Math.floor(Math.random() * gemArray.length); //picks a random number in array
-	var pull = gemArray.splice(num, 1); //pulls that number and puts it in new array
-	return pull[0]; //uses the above number (index 0 because eventually the array will grow to 3 numbers)
-};
-
-
-
-
-//resets the game on win or loss//
-
-function resetGame(){
-gameCount = 0;
-gemArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
-gemA = gemFunction();
-gemB = gemFunction();
-gemC = gemFunction();
-gemD = gemFunction();
-
-startingNumber = randomNumber(19, 120);
-$("#gameCount").html(gameCount);
-$("#startingNumber").html(startingNumber);
-$("#wins").html("Wins: " + wins);
-$("#losses").html("Losses: " + losses);
+	//sorta pretends to be jQuery
+	function $$(el){ 
+		const elementName = el.slice(1);
+		if(el.charAt(0) === "#"){
+			return document.getElementById(elementName);
+		} else if(el.charAt(0) === ".") {
+			return Array.from(document.getElementsByClassName(elementName));
+		} else {
+			throw Error(`Expecting an ID or class but instead got ${el}`);
+		}
+	}
+	
+	startGame();
+	attachListeners(); //do once	
 
 };
 
 
-
-
-
-}); //end of document ready function
