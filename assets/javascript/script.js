@@ -21,8 +21,6 @@ window.onload = function () {
 		}
 	}
 
-	let targetNumber;
-	let gameCount;
 	let wins = 0;
 	let losses = 0;
 	let pickGemValue;
@@ -33,13 +31,15 @@ window.onload = function () {
 	//generates game//
 	function startGame(){
 		assignGemValues();
-		gameCount = 0;
-		targetNumber = randomNumber(19, 120);
-		$$("#gameCount").textContent = gameCount;
-		$$("#startingNumber").textContent = targetNumber;
+		updateScoreboard();
+	};
+
+	function updateScoreboard(){
+		$$("#gameCount").textContent = 0;
+		$$("#startingNumber").textContent = randomNumber(19, 120);
 		$$("#wins").textContent = `Wins: ${wins}`;
 		$$("#losses").textContent = `Losses: ${losses}`;
-	};
+	}
 
 	//on click function//
 	function attachListeners(){
